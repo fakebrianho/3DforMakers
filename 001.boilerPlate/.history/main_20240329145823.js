@@ -25,12 +25,10 @@ function init() {
 	meshes.standard = addStandardMesh()
 
 	//lights
-	meshes.defaultLight = addLights()
 
 	//scene operations
 	scene.add(meshes.default)
 	scene.add(meshes.standard)
-	scene.add(meshes.defaultLight)
 
 	resize()
 	animate()
@@ -46,9 +44,5 @@ function resize() {
 
 function animate() {
 	requestAnimationFrame(animate)
-	meshes.default.rotation.x += 0.01
-	meshes.default.rotation.z -= 0.01
-	meshes.standard.rotation.x -= 0.01
-	meshes.standard.rotation.z += 0.01
 	renderer.render(scene, camera)
 }

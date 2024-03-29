@@ -46,9 +46,5 @@ function resize() {
 
 function animate() {
 	requestAnimationFrame(animate)
-	meshes.default.rotation.x += 0.01
-	meshes.default.rotation.z -= 0.01
-	meshes.standard.rotation.x -= 0.01
-	meshes.standard.rotation.z += 0.01
 	renderer.render(scene, camera)
 }
