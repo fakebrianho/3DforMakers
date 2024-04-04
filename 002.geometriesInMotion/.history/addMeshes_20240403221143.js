@@ -28,7 +28,7 @@ export function addPlanet1() {
 	const planetMaterial = new THREE.MeshStandardMaterial({
 		map: color,
 		normalMap: normal,
-		aoMap: ambientOcclusion,
+		ambientOcclusion: ambientOcclusion,
 		displacementMap: displace,
 		displacementScale: 0.1,
 		roughnessMap: roughnessMap,
