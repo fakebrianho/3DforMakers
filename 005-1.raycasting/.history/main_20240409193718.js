@@ -4,7 +4,6 @@ import { addBoilerPlateMesh, addStandardMesh } from './addMeshes'
 import { addLight } from './addLights'
 import Model from './Model'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import gsap from 'gsap'
 
 const scene = new THREE.Scene()
 const renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -45,24 +44,9 @@ function init() {
 	scene.add(meshes.standard)
 	scene.add(lights.defaultLight)
 
-	models()
 	raycast()
 	resize()
 	animate()
-}
-
-function models() {
-	const flower = new Model({
-		name: 'flower',
-		scene: scene,
-		meshes: meshes,
-		url: 'flowers.glb',
-		replace: true,
-		scale: new THREE.Vector3(4, 4, 4),
-		position: new THREE.Vector3(-0.2, -1, 0),
-	})
-
-	flower.init()
 }
 
 function raycast() {
@@ -75,30 +59,7 @@ function raycast() {
 			let object = intersects[i].object
 			while (object) {
 				if (object.userData.groupName === 'target1') {
-					gsap.to(meshes.default.scale, {
-						x: 5,
-						y: 5,
-						z: 5,
-						duration: 1,
-					})
-					break
-				}
-				if (object.userData.groupName === 'target2') {
-					gsap.to(meshes.standard.scale, {
-						x: 0,
-						y: 0,
-						z: 0,
-						duration: 1,
-					})
-					break
-				}
-				if (object.userData.groupName === 'flower') {
-					gsap.to(meshes.flower.rotation, {
-						x: '+=10',
-						y: '+=10',
-						z: '+=10',
-						duration: 1,
-					})
+					alert('hi')
 					break
 				}
 				object = object.parent

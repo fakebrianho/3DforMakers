@@ -4,7 +4,7 @@ import { addBoilerPlateMesh, addStandardMesh } from './addMeshes'
 import { addLight } from './addLights'
 import Model from './Model'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import gsap from 'gsap'
+import { DragControls } from 'three/examples/jsm/controls/DragControls'
 
 const scene = new THREE.Scene()
 const renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -21,9 +21,9 @@ const meshes = {}
 const lights = {}
 const mixers = []
 const clock = new THREE.Clock()
-const controls = new OrbitControls(camera, renderer.domElement)
-const pointer = new THREE.Vector2()
-const raycaster = new THREE.Raycaster()
+// const controls = new OrbitControls(camera, renderer.domElement)
+const controls = new DragControls(cubes, camera, renderer.domElement)
+const draggable = []
 
 init()
 function init() {
@@ -45,66 +45,13 @@ function init() {
 	scene.add(meshes.standard)
 	scene.add(lights.defaultLight)
 
-	models()
-	raycast()
+	initDrag()
 	resize()
 	animate()
 }
 
-function models() {
-	const flower = new Model({
-		name: 'flower',
-		scene: scene,
-		meshes: meshes,
-		url: 'flowers.glb',
-		replace: true,
-		scale: new THREE.Vector3(4, 4, 4),
-		position: new THREE.Vector3(-0.2, -1, 0),
-	})
-
-	flower.init()
-}
-
-function raycast() {
-	window.addEventListener('click', (event) => {
-		pointer.x = (event.clientX / window.innerWidth) * 2 - 1
-		pointer.y = -(event.clientY / window.innerHeight) * 2 + 1
-		raycaster.setFromCamera(pointer, camera)
-		const intersects = raycaster.intersectObjects(scene.children, true)
-		for (let i = 0; i < intersects.length; i++) {
-			let object = intersects[i].object
-			while (object) {
-				if (object.userData.groupName === 'target1') {
-					gsap.to(meshes.default.scale, {
-						x: 5,
-						y: 5,
-						z: 5,
-						duration: 1,
-					})
-					break
-				}
-				if (object.userData.groupName === 'target2') {
-					gsap.to(meshes.standard.scale, {
-						x: 0,
-						y: 0,
-						z: 0,
-						duration: 1,
-					})
-					break
-				}
-				if (object.userData.groupName === 'flower') {
-					gsap.to(meshes.flower.rotation, {
-						x: '+=10',
-						y: '+=10',
-						z: '+=10',
-						duration: 1,
-					})
-					break
-				}
-				object = object.parent
-			}
-		}
-	})
+function initDrag() {
+	const values = Object.values(meshes)
 }
 
 function resize() {

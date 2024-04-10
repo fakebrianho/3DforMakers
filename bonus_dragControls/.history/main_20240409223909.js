@@ -4,6 +4,7 @@ import { addBoilerPlateMesh, addStandardMesh } from './addMeshes'
 import { addLight } from './addLights'
 import Model from './Model'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { DragControls } from 'three/examples/jsm/controls/DragControls'
 import gsap from 'gsap'
 
 const scene = new THREE.Scene()
@@ -21,7 +22,9 @@ const meshes = {}
 const lights = {}
 const mixers = []
 const clock = new THREE.Clock()
-const controls = new OrbitControls(camera, renderer.domElement)
+// const controls = new OrbitControls(camera, renderer.domElement)
+const draggable = []
+let controls
 const pointer = new THREE.Vector2()
 const raycaster = new THREE.Raycaster()
 
@@ -45,24 +48,10 @@ function init() {
 	scene.add(meshes.standard)
 	scene.add(lights.defaultLight)
 
-	models()
+	initDrag()
 	raycast()
 	resize()
 	animate()
-}
-
-function models() {
-	const flower = new Model({
-		name: 'flower',
-		scene: scene,
-		meshes: meshes,
-		url: 'flowers.glb',
-		replace: true,
-		scale: new THREE.Vector3(4, 4, 4),
-		position: new THREE.Vector3(-0.2, -1, 0),
-	})
-
-	flower.init()
 }
 
 function raycast() {
@@ -76,28 +65,10 @@ function raycast() {
 			while (object) {
 				if (object.userData.groupName === 'target1') {
 					gsap.to(meshes.default.scale, {
-						x: 5,
-						y: 5,
-						z: 5,
-						duration: 1,
-					})
-					break
-				}
-				if (object.userData.groupName === 'target2') {
-					gsap.to(meshes.standard.scale, {
-						x: 0,
-						y: 0,
-						z: 0,
-						duration: 1,
-					})
-					break
-				}
-				if (object.userData.groupName === 'flower') {
-					gsap.to(meshes.flower.rotation, {
-						x: '+=10',
-						y: '+=10',
-						z: '+=10',
-						duration: 1,
+						x: 10,
+						y: 10,
+						z: 10,
+						duration: 2,
 					})
 					break
 				}
@@ -105,6 +76,15 @@ function raycast() {
 			}
 		}
 	})
+	//
+}
+
+function initDrag() {
+	const values = Object.values(meshes)
+	for (let value of values) {
+		draggable.push(value)
+	}
+	controls = new DragControls(draggable, camera, renderer.domElement)
 }
 
 function resize() {

@@ -58,8 +58,6 @@ function models() {
 		meshes: meshes,
 		url: 'flowers.glb',
 		replace: true,
-		scale: new THREE.Vector3(4, 4, 4),
-		position: new THREE.Vector3(-0.2, -1, 0),
 	})
 
 	flower.init()
@@ -88,15 +86,6 @@ function raycast() {
 						x: 0,
 						y: 0,
 						z: 0,
-						duration: 1,
-					})
-					break
-				}
-				if (object.userData.groupName === 'flower') {
-					gsap.to(meshes.flower.rotation, {
-						x: '+=10',
-						y: '+=10',
-						z: '+=10',
 						duration: 1,
 					})
 					break

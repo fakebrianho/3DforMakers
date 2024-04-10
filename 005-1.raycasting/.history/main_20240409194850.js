@@ -92,13 +92,8 @@ function raycast() {
 					})
 					break
 				}
-				if (object.userData.groupName === 'flower') {
-					gsap.to(meshes.flower.rotation, {
-						x: '+=10',
-						y: '+=10',
-						z: '+=10',
-						duration: 1,
-					})
+				if (object.userData.name === 'flower') {
+					alert('hello')
 					break
 				}
 				object = object.parent
