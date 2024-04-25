@@ -20,10 +20,7 @@ var b = new THREE.Vector3()
 var coronaSafetyDistance = 0.3
 var velocity = 0.0
 var speed = 0.0
-let goal, follow
 
-goal = new THREE.Object3D()
-follow = new THREE.Object3D()
 const scene = new THREE.Scene()
 const renderer = new THREE.WebGLRenderer({ antialias: true })
 const camera = new THREE.PerspectiveCamera(

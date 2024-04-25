@@ -27,8 +27,7 @@ var dir = new THREE.Vector3()
 var a = new THREE.Vector3()
 var b = new THREE.Vector3()
 var coronaSafetyDistance = 0.3
-var velocityVertical = 0.0
-var velocityHoriontal = 0.0
+var velocity = 0.0
 var speedVertical = 0.0
 var speedHorizontal = 0.0
 let goal, follow
@@ -179,10 +178,9 @@ function animate() {
 	if (keys.w) speedVertical = 0.01
 	else if (keys.s) speedVertical = -0.01
 
-	if (keys.d) speedHorizontal = 0.01
-	else if (keys.a) speedHorizontal = -0.01
-	velocityVertical += (speedVertical - velocityVertical) * 0.5
-	velocityHoriontal += (speedHorizontal - velocityHoriontal) * 0.5
+	if (keys.d) speed = 0.01
+	else if (keys.a) speed = -0.01
+	velocity += (speed - velocity) * 0.5
 	if (asciiEffectEnabled) {
 		renderer.clear()
 
@@ -194,8 +192,11 @@ function animate() {
 	}
 	// controls.update()
 	if (meshes.ship) {
-		meshes.ship.translateY(velocityVertical)
-		meshes.ship.translateX(velocityHoriontal)
+		// composer.outlinePass.selectedObjects = [scene]
+		meshes.ship.translateY(velocity)
+
+		if (keys.a) meshes.ship.rotateY(0.05)
+		else if (keys.d) meshes.ship.rotateY(-0.05)
 
 		a.lerp(meshes.ship.position, 0.4)
 		b.copy(goal.position)

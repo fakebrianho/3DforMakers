@@ -181,8 +181,7 @@ function animate() {
 
 	if (keys.d) speedHorizontal = 0.01
 	else if (keys.a) speedHorizontal = -0.01
-	velocityVertical += (speedVertical - velocityVertical) * 0.5
-	velocityHoriontal += (speedHorizontal - velocityHoriontal) * 0.5
+	velocity += (speedVertical - velocity) * 0.5
 	if (asciiEffectEnabled) {
 		renderer.clear()
 
@@ -194,8 +193,11 @@ function animate() {
 	}
 	// controls.update()
 	if (meshes.ship) {
-		meshes.ship.translateY(velocityVertical)
-		meshes.ship.translateX(velocityHoriontal)
+		// composer.outlinePass.selectedObjects = [scene]
+		meshes.ship.translateY(velocity)
+
+		if (keys.a) meshes.ship.rotateY(0.05)
+		else if (keys.d) meshes.ship.rotateY(-0.05)
 
 		a.lerp(meshes.ship.position, 0.4)
 		b.copy(goal.position)

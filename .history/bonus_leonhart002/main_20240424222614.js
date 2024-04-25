@@ -194,8 +194,12 @@ function animate() {
 	}
 	// controls.update()
 	if (meshes.ship) {
+		// composer.outlinePass.selectedObjects = [scene]
 		meshes.ship.translateY(velocityVertical)
 		meshes.ship.translateX(velocityHoriontal)
+
+		if (keys.a) meshes.ship.rotateY(0.05)
+		else if (keys.d) meshes.ship.rotateY(-0.05)
 
 		a.lerp(meshes.ship.position, 0.4)
 		b.copy(goal.position)

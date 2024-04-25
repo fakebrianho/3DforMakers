@@ -103,7 +103,7 @@ export default class Model {
 				this.rotation.z
 			)
 			this.meshes[`${this.name}`].userData.groupName = this.name
-			this.meshes[`${this.name}`].add(this.follow)
+			this.meshes[`${this.name}`].add(follow)
 			this.scene.add(this.meshes[`${this.name}`])
 		})
 	}

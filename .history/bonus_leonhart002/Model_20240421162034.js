@@ -36,7 +36,6 @@ export default class Model {
 		this.textureLoader = new TextureLoader()
 		this.animations = obj.animationState || false
 		this.replaceMaterials = obj.replace || false
-		this.follow = obj.follow
 		this.defaultMatcap = obj.replaceURL
 			? this.textureLoader.load(`${obj.replaceURL}`)
 			: this.textureLoader.load('/mat.png')
@@ -65,16 +64,16 @@ export default class Model {
 				const material = new MeshLambertMaterial({
 					color: 0x004444,
 					transparent: true,
-					opacity: 0.5,
-				})
+					opacity: 0.5
+				});
 				gltf.scene.traverse((child) => {
 					if (child.isMesh) {
 						child.material = material
-						const edges = new EdgesGeometry(child.geometry, -10)
+						const edges = new EdgesGeometry(child.geometry, -10);
 						const edgesMaterial = new LineBasicMaterial({
-							color: 0x00ffff,
-						})
-						const line = new LineSegments(edges, edgesMaterial)
+						color: 0x00ffff,
+					})
+						const line = new LineSegments(edges, edgesMaterial);
 						child.add(line)
 					}
 				})
@@ -103,7 +102,6 @@ export default class Model {
 				this.rotation.z
 			)
 			this.meshes[`${this.name}`].userData.groupName = this.name
-			this.meshes[`${this.name}`].add(this.follow)
 			this.scene.add(this.meshes[`${this.name}`])
 		})
 	}

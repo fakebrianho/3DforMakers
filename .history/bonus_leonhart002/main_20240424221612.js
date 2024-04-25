@@ -15,7 +15,7 @@ const camera = new THREE.PerspectiveCamera(
 	0.1,
 	100
 )
-camera.position.set(0, 1.0, 5)
+camera.position.set(0, 2, 5)
 var time = 0
 var newPosition = new THREE.Vector3()
 var matrix = new THREE.Matrix4()
@@ -27,10 +27,8 @@ var dir = new THREE.Vector3()
 var a = new THREE.Vector3()
 var b = new THREE.Vector3()
 var coronaSafetyDistance = 0.3
-var velocityVertical = 0.0
-var velocityHoriontal = 0.0
-var speedVertical = 0.0
-var speedHorizontal = 0.0
+var velocity = 0.0
+var speed = 0.0
 let goal, follow
 const keys = {
 	a: false,
@@ -67,11 +65,11 @@ toggleButton.addEventListener('click', () => {
 	asciiEffectEnabled = !asciiEffectEnabled
 	effect.domElement.style.display = asciiEffectEnabled ? 'block' : 'none'
 	renderer.domElement.style.display = asciiEffectEnabled ? 'none' : 'block'
-	// if (asciiEffectEnabled) {
-	// 	controls = new OrbitControls(camera, effect.domElement)
-	// } else {
-	// 	controls = new OrbitControls(camera, renderer.domElement)
-	// }
+	if (asciiEffectEnabled) {
+		controls = new OrbitControls(camera, effect.domElement)
+	} else {
+		controls = new OrbitControls(camera, renderer.domElement)
+	}
 })
 
 // document.body.appendChild(renderer.domElement)
@@ -93,7 +91,7 @@ function init() {
 	effect.domElement.style.position = 'absolute'
 	effect.domElement.style.top = '0'
 	effect.domElement.style.left = '0'
-	// controls = new OrbitControls(camera, effect.domElement)
+	controls = new OrbitControls(camera, effect.domElement)
 
 	document.body.appendChild(renderer.domElement)
 	document.body.appendChild(effect.domElement)
@@ -173,16 +171,12 @@ function animate() {
 	//
 	// console.log(composer)
 	// composer.composer.render()
-	speedVertical = 0.0
-	speedHorizontal = 0.0
+	speed = 0.0
 
-	if (keys.w) speedVertical = 0.01
-	else if (keys.s) speedVertical = -0.01
+	if (keys.w) speed = 0.01
+	else if (keys.s) speed = -0.01
 
-	if (keys.d) speedHorizontal = 0.01
-	else if (keys.a) speedHorizontal = -0.01
-	velocityVertical += (speedVertical - velocityVertical) * 0.5
-	velocityHoriontal += (speedHorizontal - velocityHoriontal) * 0.5
+	velocity += (speed - velocity) * 0.3
 	if (asciiEffectEnabled) {
 		renderer.clear()
 
@@ -192,10 +186,13 @@ function animate() {
 		// renderer.render(scene, camera)
 		composer.composer.render()
 	}
-	// controls.update()
+	controls.update()
 	if (meshes.ship) {
-		meshes.ship.translateY(velocityVertical)
-		meshes.ship.translateX(velocityHoriontal)
+		// composer.outlinePass.selectedObjects = [scene]
+		meshes.ship.translateZ(velocity)
+
+		if (keys.a) meshes.ship.rotateY(0.05)
+		else if (keys.d) meshes.ship.rotateY(-0.05)
 
 		a.lerp(meshes.ship.position, 0.4)
 		b.copy(goal.position)
