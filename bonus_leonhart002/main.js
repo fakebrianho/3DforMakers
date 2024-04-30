@@ -15,18 +15,13 @@ const camera = new THREE.PerspectiveCamera(
 	0.1,
 	100
 )
-camera.position.set(0, 1.0, 5)
-var time = 0
-var newPosition = new THREE.Vector3()
-var matrix = new THREE.Matrix4()
+camera.position.set(0, 1.0, 0)
 
-var stop = 1
-var DEGTORAD = 0.01745327
 var temp = new THREE.Vector3()
 var dir = new THREE.Vector3()
 var a = new THREE.Vector3()
 var b = new THREE.Vector3()
-var coronaSafetyDistance = 0.3
+var coronaSafetyDistance = 5.0
 var velocityVertical = 0.0
 var velocityHoriontal = 0.0
 var speedVertical = 0.0
@@ -109,6 +104,8 @@ function init() {
 	meshes.default.scale.set(2, 2, 2)
 
 	composer = postprocessing(scene, camera, renderer)
+	var gridHelper = new THREE.GridHelper(40, 40)
+	scene.add(gridHelper)
 
 	goal.add(camera)
 	//scene operations
@@ -124,7 +121,6 @@ function init() {
 function keySetup() {
 	window.addEventListener('keydown', (e) => {
 		if (keys[e.key] !== undefined) keys[e.key] = true
-		console.log(keys)
 	})
 	window.addEventListener('keyup', (e) => {
 		if (keys[e.key] !== undefined) keys[e.key] = false
@@ -132,12 +128,18 @@ function keySetup() {
 }
 
 function models() {
+	const plane = new THREE.Mesh(
+		new THREE.PlaneGeometry(3, 3),
+		new THREE.MeshNormalMaterial()
+	)
+	meshes.window = plane
+	scene.add(meshes.window)
 	const Ship = new Model({
 		name: 'ship',
 		url: '/sbneko.glb',
 		scene: scene,
 		meshes: meshes,
-		scale: new THREE.Vector3(0.6, 0.6, -0.6),
+		scale: new THREE.Vector3(0.3, 0.3, -0.3),
 		position: new THREE.Vector3(0, 0, -1),
 		replace: true,
 		//replaceURL: '/newMatcap.png',
@@ -176,8 +178,8 @@ function animate() {
 	speedVertical = 0.0
 	speedHorizontal = 0.0
 
-	if (keys.w) speedVertical = 0.01
-	else if (keys.s) speedVertical = -0.01
+	if (keys.w) speedVertical = 0.05
+	else if (keys.s) speedVertical = -0.05
 
 	if (keys.d) speedHorizontal = 0.01
 	else if (keys.a) speedHorizontal = -0.01
@@ -194,8 +196,10 @@ function animate() {
 	}
 	// controls.update()
 	if (meshes.ship) {
-		meshes.ship.translateY(velocityVertical)
-		meshes.ship.translateX(velocityHoriontal)
+		meshes.ship.translateZ(-velocityVertical)
+		// meshes.ship.translateX(velocityHoriontal)
+		if (keys.a) meshes.ship.rotateY(0.05)
+		else if (keys.d) meshes.ship.rotateY(-0.05)
 
 		a.lerp(meshes.ship.position, 0.4)
 		b.copy(goal.position)
@@ -203,7 +207,7 @@ function animate() {
 		dir.copy(a).sub(b).normalize()
 		const dis = a.distanceTo(b) - coronaSafetyDistance
 		goal.position.addScaledVector(dir, dis)
-		goal.position.lerp(temp, 0.02)
+		goal.position.lerp(temp, 0.5)
 		temp.setFromMatrixPosition(follow.matrixWorld)
 		camera.lookAt(meshes.ship.position)
 	}
